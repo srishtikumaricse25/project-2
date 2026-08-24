@@ -1,0 +1,13 @@
+{
+  "name": "donate-ease-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix donate-ease",
+    "build": "npm run build --prefix donate-ease",
+    "start": "npm start --prefix donate-ease",
+    "lint": "npm run lint --prefix donate-ease",
+    "seed": "node donate-ease/src/lib/seed.js",
+    "typecheck": "npm run typecheck --prefix donate-ease"
+  }
+}
