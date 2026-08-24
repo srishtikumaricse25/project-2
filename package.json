@@ -1,16 +1,25 @@
 {
-  "name": "donate-ease-workspace",
-  "version": "1.0.0",
+  "name": "donate-ease",
+  "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "donate-ease"
-  ],
   "scripts": {
-    "dev": "npm run dev --prefix donate-ease",
-    "build": "npm run build --prefix donate-ease",
-    "start": "npm run start --prefix donate-ease",
-    "lint": "npm run lint --prefix donate-ease",
-    "seed": "node donate-ease/src/lib/seed.js",
-    "typecheck": "npm run typecheck --prefix donate-ease"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "echo No TypeScript typecheck needed for JS"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
+    "jsonwebtoken": "^9.0.3",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0"
   }
 }
