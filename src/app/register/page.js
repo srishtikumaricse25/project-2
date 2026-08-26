@@ -43,15 +43,39 @@ function RegisterForm() {
     e.preventDefault();
     setError('');
 
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+
+    if (!trimmedName) {
+      setError('Please enter your full name.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters.');
+      return;
+    }
+
+    if (role === 'ngo' && !formData.org_name.trim()) {
+      setError('Organization name is required for NGO registration.');
       return;
     }
 
     setLoading(true);
 
     try {
-      const payload = { ...formData, role };
+      const payload = {
+        ...formData,
+        name: trimmedName,
+        email: trimmedEmail,
+        role
+      };
       const res = await register(payload);
 
       if (res.success) {

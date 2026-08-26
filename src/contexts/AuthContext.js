@@ -38,33 +38,43 @@ export function AuthProvider({ children }) {
   }, [fetchUser]);
 
   const login = async (email, password) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem('token', data.token);
-      setUser(data.user);
-      return { success: true, user: data.user };
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: (email || '').trim(), password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (data.token) localStorage.setItem('token', data.token);
+        setUser(data.user);
+        return { success: true, user: data.user, token: data.token };
+      }
+      return { success: false, error: data.message || data.error || 'Invalid credentials' };
+    } catch (err) {
+      console.error('Login network error:', err);
+      return { success: false, error: 'Network error or server unavailable. Please try again.' };
     }
-    return { success: false, error: data.error };
   };
 
   const register = async (userData) => {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem('token', data.token);
-      setUser(data.user);
-      return { success: true, user: data.user };
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (data.token) localStorage.setItem('token', data.token);
+        setUser(data.user);
+        return { success: true, user: data.user, token: data.token };
+      }
+      return { success: false, error: data.message || data.error || 'Registration failed' };
+    } catch (err) {
+      console.error('Register network error:', err);
+      return { success: false, error: 'Network error or server unavailable. Please try again.' };
     }
-    return { success: false, error: data.error };
   };
 
   const logout = () => {

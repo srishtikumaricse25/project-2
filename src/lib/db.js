@@ -10,6 +10,7 @@ function getDb() {
     db = new Database(dbPath);
     db.pragma('journal_mode = WAL');
     db.pragma('foreign_keys = ON');
+    console.log(`[DATABASE] SQLite database initialized at ${dbPath}`);
     initializeSchema();
   }
   return db;
@@ -33,6 +34,17 @@ function initializeSchema() {
   try {
     db.exec('ALTER TABLE donations ADD COLUMN num_packages INTEGER DEFAULT 1;');
   } catch (e) { /* Column may already exist */ }
+
+  // Auto-seed if users table is empty
+  try {
+    const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
+    if (!userCount || userCount.count === 0) {
+      const { seed } = require('./seed');
+      seed();
+    }
+  } catch (e) {
+    // Ignore if seed already ran
+  }
 }
 
 module.exports = { getDb };

@@ -19,10 +19,28 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!password) {
+      setError('Please enter your password.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await login(email, password);
+      const res = await login(trimmedEmail, password);
       if (res.success) {
         showSuccess(`Welcome back, ${res.user.name}!`);
         if (res.user.role === 'admin') router.push('/dashboard/admin');
@@ -32,6 +50,7 @@ export default function LoginPage() {
         setError(res.error || 'Login failed. Please try again.');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
