@@ -64,8 +64,13 @@ function RegisterForm() {
       } else {
         setError(res.error || 'Registration failed. Please check your inputs.');
       }
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError(
+        error.response?.data?.message ||
+        error.message ||
+        "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
